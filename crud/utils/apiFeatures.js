@@ -18,6 +18,7 @@ class APIFeatures {
 
         let queryStr = JSON.stringify(queryObj)
         queryStr = queryStr.replace(/\b(gte|lte|lt|gt)\b/g, match => `$${match}`)
+        // $${match}`` is executed, which adds a dollar sign ('$') before the matched word. This transforms the words into valid MongoDB comparison operators.
         console.log(JSON.parse(queryStr));
 
         // \b is used to  match the parsed words correctly

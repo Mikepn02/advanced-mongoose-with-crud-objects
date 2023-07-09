@@ -52,94 +52,7 @@ exports.getAllTours = async (req, res) => {
 
 
     try {
-        // const queryObj = { ...req.query }
-        // //the spread operators ... are responsible to take out all the field out of the object
-        // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        // excludedFields.forEach(el => delete queryObj[el])
-
-
-
-        // // advanced filtering
-
-
-        // let queryStr = JSON.stringify(queryObj)
-        // queryStr = queryStr.replace(/\b(gte|lte|lt|gt)\b/g,match => `$${match}`)
-        // console.log(JSON.parse(queryStr));
-
-        // // \b is used to  match the parsed words correctly
-
-
-
-
-        // // const query = Tour.find(queryObj)
-        // let query = Tour.find(JSON.parse(queryStr))
-        // console.log(req.query)
-
-
-        // console.log(req.query,queryObj)
-
-        //first way :
-
-        // const tours = await Tour.find({
-        //     duration:5,
-        //     difficulty:'easy'
-        // })
-
-        //second way: 
-
-        // tours = await Tour.find()
-        // .where('duration')
-        // .equals(5)
-        // .where('difficulty')
-        // .equals("easy")
-
-
-        // sorting
-        //  if(req.query.sort){
-        // const sortBy =  req.query.sort.split(',').join(' ')
-        //    query = query.sort(sortBy)
-        //  }else{
-        //     query = query.sort("-createAt") 
-        //  }
-
-
-
-        // 3) limiting the fields
-
-
-        // if (req.query.fields) {
-        //     const fields = req.query.fields.split(",").join(" ");
-        //     query = query.select(fields)
-        // } else {
-        //     query = query.select("-__v");
-
-
-        //     //- sign means excluded
-
-
-        // }
-
-        //  4) pagination
-
-        // const page = req.query.page * 1 || 1;
-        // const limit = req.query.limit * 1 || 100;
-        // const skip = (page - 1) * limit;
-
-
-        // //page=2&limit(10),1-10 ,page 1, 11-20 ,page-2,21-30 page 3
-        // // for skip when we request page 3 we need to know that page 3 will start from 21-30 then we need to skip 20 results that why the skip will equal to page -1 * limit to know the results to skip 
-        // //skip is the amount of data that will be skipped while collecting the data
-
-        // query = query.skip(skip).limit(limit)
-
-        // if (req.query.page) {
-        //     const numTours = await Tour.countDocuments();
-        //     if (skip >= numTours) throw new Error("The page does not exist ");
-        // }
-
-
-
-        const features = new APIFeatures(Tour.find(), req.query)
+         const features = new APIFeatures(Tour.find(), req.query)
             .filter()
             .sort()
             .limitFields()
@@ -265,20 +178,22 @@ exports.getTourStats = async (req, res) => {
         })
     }
 }
+
 exports.getMonthlyPlan = async(req,res) =>{
    try{
     const year = req.params.year *1;//2021
-    // *1 is transfrom to a number
+    // *1 is transfrom to a number from string
     const plan = await Tour.aggregate([
         {
             $unwind: '$startDates'
         },
-        //unwind is used to deconstruct an array from the input document and  then output one field for each element of the array
+        //unwind is used to deconstruct an array from the input document and  then output one field for each element of the array  that will return first element of array
         {
             $match: {
                 startDates:{
                     $gte: new Date(`${year}-01-01`),
                     //here we want a data that is greater than january first
+                    // i.e it must be between 2020 and 2022
                     $lte:new Date(`${year}-12-31`)
                 }
             }

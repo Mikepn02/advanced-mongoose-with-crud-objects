@@ -103,12 +103,12 @@ tourSchema.pre(/^find/, function (next) {
   this.start = Date.now();
   next();
 })
+
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds `);
   console.log(docs);
   next();
 })
-
 // aggregation middleware allow us to add hooks after an aggregation middleware
 
 tourSchema.pre('aggregate', function (next) {
