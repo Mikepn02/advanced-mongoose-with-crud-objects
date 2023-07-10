@@ -17,7 +17,6 @@
 
 
 
-        const query = Tour.find(queryObj)
         let query = Tour.find(JSON.parse(queryStr))
         console.log(req.query)
 
